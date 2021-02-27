@@ -16,7 +16,30 @@
 
 - **Affordability**: Organizations can use powerful machines that they would not be able to afford if they had to purchase and maintain them themselves. For example, GPU processing units, which are very expensive to buy and very expensive to lose to an attacker.
 
-## Examples of Web Services
+
+## Cloud Services
+
+- **IaaS (Infrastructure as a Service)**: Storage, networking, servers, basic access management and other provider-enforced security controls
+
+- **PaaS (Platform as a Service)**: Cloud environment for building an delivering applications
+
+- **SaaS (Software as a Service)**: Secure User applications through internet- Allows you to give access to users to certain applications
+
+- **DaaS/DBaaS (Data as a Service/Database as a Service)**: Allows company's data to a user
+
+- **CaaS (Communications as a Service)**: Instant Messaging (IM), collaboration and video conferencing, Internet telephony (VoIP)
+
+- **XaaS (Anything as a Service)**: Any combination of service
+
+## IaaS (Infrastructure Service)
+
+1. **Resource Goup** Creating this is the first step so you can better organize resourses. It consists of:
+- network
+- firewall
+- virtual computers
+
+
+
 
 ## Setting up a virtual machine using Azure
 
