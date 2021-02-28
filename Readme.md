@@ -32,15 +32,16 @@
 - **XaaS (Anything as a Service)**: Any combination of service
 
 - **Modern Technologies**: 
-       - `Containers` - A small scale VM in Mbs- affordable
-       - `Provisioners` - Tool to configure VMs, main use configuring thousands of machines once with same settings - Main benifit is to eliminate human error
-       - `Infrastructure as code` Also called **IaC** files
-                 - These files capture the description of the entire designed network in code
+- `Containers` - A small scale VM in Mbs- affordable
+- `Provisioners` - Tool to configure VMs, main use configuring thousands of machines once with same settings - Main benifit is to eliminate human error
+- `Infrastructure as code` Also called **IaC** files
+- These files capture the description of the entire designed network in code
                  This is the code used by Provisioners for configuration or re-configuration of VMs
-       - `Continuous Integration/Continuous deployment` Also called **CI/CD** Systems
-                - Allows you to update Network by updating the IaC files. 
-                - The Glue that binds all the things together
-                - Allows automated configuration and infrastructure management
+- `Continuous Integration/Continuous deployment` Also called **CI/CD** Systems
+- Allows you to update Network by updating the IaC files. 
+- The Glue that binds all the things together
+- Allows automated configuration and infrastructure management
+- Pen testers actually perform the security testing
 
 ## IaaS (Infrastructure Service)
 
@@ -58,18 +59,21 @@
 
 - We can create an initial large network and then sub-net inside of it. 
 
-```
-10.0.0.0/16 for the large network.
-10.10.1.0/24 for the first subnet.
+                ```
+                10.0.0.0/16 for the large network.
+                10.10.1.0/24 for the first subnet.
 
-or simply 192.168.1.0/24
-```
+                or simply 192.168.1.0/24
+                ```
 
 - Azure Configurations are safe and secure and are automatically done- They are difficult to hack
 
 - Cloud provider also give logging capabilities
 
-2. 
+- The resource group we created has been added to the virtual network
+
+3. **Security Groups** - Adding a firewall
+        - The basic firewall is called `network security group (NSG)`
 
 
 
