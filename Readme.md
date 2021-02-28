@@ -33,10 +33,10 @@
 
 ## IaaS (Infrastructure Service)
 
-1. **Resource Goup** Creating this is the first step so you can better organize resourses. It consists of:
-- network
-- firewall
-- virtual computers
+1. **Resource Goup** Creating this is the first step so you can better organize resourses-logical grouping of resources. It consists of:
+        - network - A virtual network is a collection of virtual machines - easy to re-configure
+        - firewall
+        - virtual computers
 
 
 
