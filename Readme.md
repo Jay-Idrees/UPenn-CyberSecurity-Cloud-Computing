@@ -31,13 +31,45 @@
 
 - **XaaS (Anything as a Service)**: Any combination of service
 
+- **Modern Technologies**: 
+       - `Containers` - A small scale VM in Mbs- affordable
+       - `Provisioners` - Tool to configure VMs, main use configuring thousands of machines once with same settings - Main benifit is to eliminate human error
+       - `Infrastructure as code` Also called **IaC** files
+                 - These files capture the description of the entire designed network in code
+                 This is the code used by Provisioners for configuration or re-configuration of VMs
+       - `Continuous Integration/Continuous deployment` Also called **CI/CD** Systems
+                - Allows you to update Network by updating the IaC files. 
+                - The Glue that binds all the things together
+                - Allows automated configuration and infrastructure management
+
 ## IaaS (Infrastructure Service)
 
-1. **Resource Goup** Creating this is the first step so you can better organize resourses-logical grouping of resources. It consists of:
-        - network - A virtual network is a collection of virtual machines - easy to re-configure
+1. **Resource Goup** Creating this is the first step so you can better organize resourses-logical grouping of resources. 
+- It consists of:
+        - `VNet` or Virtual network - A virtual network is a collection of virtual machines and related virtual tools to substitute for normal setup - easy to re-configure - the organizaion is usually task oriented. The VMs will have their own software version of vNICs(Network Interface Cards), ip addresses, subnets- the subnets are an independent resource that can be configured separately. 
         - firewall
         - virtual computers
 
+ 2. **Virtual Network**       
+
+- Only after a virtual network is created can the servers and the services be deployed
+
+- Prices vary by region - Be cognizent of that
+
+- We can create an initial large network and then sub-net inside of it. 
+
+```
+10.0.0.0/16 for the large network.
+10.10.1.0/24 for the first subnet.
+
+or simply 192.168.1.0/24
+```
+
+- Azure Configurations are safe and secure and are automatically done- They are difficult to hack
+
+- Cloud provider also give logging capabilities
+
+2. 
 
 
 
