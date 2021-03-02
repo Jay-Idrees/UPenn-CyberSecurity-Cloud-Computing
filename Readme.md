@@ -144,15 +144,26 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 
 
-8. **Containers** - Low scale VMs
+8. **Containers** - Low scale VMs - (Because they have no OS or hardware of their own)- Easily duplicated
 
-- LAMP web server, you will need to: install Linux, a web server like Apache, a database like MYSQL, and a back-end codebase like PHP.
+- Typically, you design a VM and then create containers inside it (e-g 100 containers), containers can also be automatically created. 
 
-- This VM can be copied if another LAMP server is needed
+- The containers can be linked. There can be a database container, applicattion containers. Goal is to make a machine as stateless as possible. If the containers are task oriented rather than user oriented, then it makes easy to create and destroy containers that have not been changed. 
+
+- `Horizontal scaling` Creating more containers to handle additional load. (preferred on cloud as its more flexble)
+- `Vertical scaling` is when you add more RAM or CPU to the verticle scaling. 
+
+- Additional containers can be created for to manage load as the number of users expand
+
+- LAMP web server, you will need to: install Linux, a web server like Apache, a database like MYSQL, and a back-end codebase like PHP. This VM can be copied if another LAMP server is needed
+
+- We could create a LAMP container image which is downloaded as an app, the container is cerated from the image that was downloaded - The image can be easily downloaded from computer to computer
+
+- Containers can be attacked - and easily replaced w/o damage to the rest of the network, if they have not been changed- thats where the task oriented containers come into play. As you can have database containers that store only the data- the rest of the containers can be deleted or replaced if compromised. 
 
 - The Purpose is to share common resources and create a new image of only what is different- Thats the purpose of the container
 
-- The main different between the multiple containers and the multiple VMs which are copies of the same original image that the containers can share some files, while the VMs are completely independent
+- The main different between the multiple containers and the multiple VMs which are copies of the same original image that the containers can share some files or be connected to the same resources, while the VMs are completely independent. Both the VMs and the conainers can share the same host (Virtual network)
 
 ## Network Redundency -Network Design
 
