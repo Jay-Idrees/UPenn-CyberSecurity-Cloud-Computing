@@ -113,11 +113,46 @@
 
 - A network behind the gateway is more secure
 
-6. **Gateway router** or **Fanning in** between the VMs and the Network forces all traffic through a single node `fanning inn`
+
+
+6. **Connecting to a VM using SSH** This is the same as **Configuring a VPN - Virtual Private Network** or **Setting up a jump box**
+
+ - **Gateway router** or **Jump-box** between the VMs on a VNet forces all traffic through a single node `fanning inn`
 
 - Notice the difference b/w `secure architecure` and `secure configuration`. Configuration refers to security rules or the intrusion detection of the VMs or network while the configuration refers to tolerance and redundency - how effective is the network in containng the effects of the breach. For example the use of ssh keys to access VMs is a configuration measure while Using a gateway router (jump-box) before the network is a confguration - this dramatically reduces the attack surface area 
 
+- In the inbound security rules, consider the following. 
+Source: Use the IP Addresses setting, with your IP address in the field.
 
+- `Source port ranges`: Set to Any or * here.
+
+- `Destination`: This can be set VirtualNetwork but a better setting is to specify the internal IP of your jump box to really limit this traffic.
+
+- `Destination port ranges`: Since we only want to allow SSH, designate port 22.
+
+- `Protocol`: Set to Any or TCP.
+
+- `Action`: Set to Allow traffic.
+
+- `Priority`: This must be a lower number than your rule to deny all traffic, i.e., less than 4,096.
+
+- `Name`: Name this rule anything you like, but it should describe the rule. For example: SSH.
+
+- `Description`: Write a short description similar to: "Allow SSH from my IP."
+
+- Connect SSH using `ssh admin-username@VM-public-IP` This is done using gitbash
+
+
+
+8. **Containers** - Low scale VMs
+
+- LAMP web server, you will need to: install Linux, a web server like Apache, a database like MYSQL, and a back-end codebase like PHP.
+
+- This VM can be copied if another LAMP server is needed
+
+- The Purpose is to share common resources and create a new image of only what is different- Thats the purpose of the container
+
+- The main different between the multiple containers and the multiple VMs which are copies of the same original image that the containers can share some files, while the VMs are completely independent
 
 ## Network Redundency -Network Design
 
