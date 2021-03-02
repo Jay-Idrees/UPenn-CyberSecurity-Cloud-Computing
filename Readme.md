@@ -50,6 +50,7 @@
         - `VNet` or Virtual network - A virtual network is a collection of virtual machines and related virtual tools to substitute for normal setup - easy to re-configure - the organizaion is usually task oriented. The VMs will have their own software version of vNICs(Network Interface Cards), ip addresses, subnets- the subnets are an independent resource that can be configured separately. 
         - firewall
         - virtual computers
+- Many resources can be created independently and then attached later to an independent network
 
  2. **Virtual Network**       
 
@@ -72,9 +73,66 @@
 
 - The resource group we created has been added to the virtual network
 
-3. **Security Groups** - Adding a firewall
-        - The basic firewall is called `network security group (NSG)`
+3. **Network Security Groups** - Adding a firewall
+- The basic firewall is called `network security group (NSG)`
+- Initially create a firewall and then attach it to a virtual network
+- First create an NSG that blocks all traffic to and from the network (Including remote desktop or RDP and VNC traffic)
+- This NSG is then be cloned and used as a template, and can be modified and added to a network
 
+- There are 3 main rules 1) Allows the VMs in virtual network to communicate with eachother, 2) Allows the loadbalancer to route traffic and 3) Block all other traffic. 
+
+> Adding a rule for inbound/outbound
+
+- Source: can be a sigle IP, range, application security group, service tag
+- Source IP addresses/CDIR ranges: Speify the ip address or range
+- Source port ranges: * typically as the source ports are typically random
+- Deatination: To virtual network or a specific computer
+- Destination: We will specify as 3389 as this is the port that is usually assigned to 
+
+
+4. **Configuring a `virtual machine` power**
+
+> Components of a VM
+
+- Ram, Storage
+- Disks are either OS or Data disks (VM images,Media, Text, Forensic disk images) can be HDD or SSD
+
+- Create Jump-Box
+
+- Create 2 more new VMs with the following properties:
+        1. Each VM should be named "Web-1" and "Web-2"
+        2. Each VM must be created in the Red Team resource group.
+        3. Each VM must be located in the same region as your resource and security groups.
+        4. You should use the same admin name for all 3 machines.
+        5. Make sure to take a note of this username, as you will need it to login later.
+
+5. **SSH setup**
+
+- Generating the SSH key
+- Pasting the SSH key inside the Setting of the VM, so that it maybe connected
+
+- A network behind the gateway is more secure
+
+6. **Gateway router** or **Fanning in** between the VMs and the Network forces all traffic through a single node `fanning inn`
+
+- Notice the difference b/w `secure architecure` and `secure configuration`. Configuration refers to security rules or the intrusion detection of the VMs or network while the configuration refers to tolerance and redundency - how effective is the network in containng the effects of the breach. For example the use of ssh keys to access VMs is a configuration measure while Using a gateway router (jump-box) before the network is a confguration - this dramatically reduces the attack surface area 
+
+
+
+## Network Redundency -Network Design
+
+- If one server falls the network does not collapse. 
+- If authentication server goes down employees wont be able to log on
+
+- Using two gateways will offer redundency. If one gateway is down, then the second one will be on- the downside with this approach is that it requires 2 machines to secure and 2 targets for hackers
+- Similarly adding multiple databases also increases the redundancy but increases **Attack Surface**
+- We can also add a `SIEM - Securty infromation and event management` before the log database. These perform realtime analysis of the log and other services of inrusion detection
+
+
+## Activities:
+
+- Setting up virtual network
+- Setting up inbound an outbound rules
 
 
 ## Setting up a virtual machine using Azure
