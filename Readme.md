@@ -165,6 +165,54 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 - The main different between the multiple containers and the multiple VMs which are copies of the same original image that the containers can share some files or be connected to the same resources, while the VMs are completely independent. Both the VMs and the conainers can share the same host (Virtual network)
 
+9. **Docker** - Program to make and manage custom containers
+
+- Makes it easy to install complex server configurations
+
+- You can download containers created by other users- has a container hub
+
+## IaaC (Infractructure as code)
+
+- Using code to configure the network
+
+- 
+
+## Key terminal commands
+
+1. `ssh admin@jump.box.IP` To connect to the jump box
+2. `sudo docker container list -a` To check the list of all the containers currently installed 
+3. `sudo docker start container_name` Run the latest version of the container that has been previously installed (`run` installs the first time and `start` installs the second time)
+4. `sudo docker ps` Check how many containers are running actively right now
+
+5. Now you are inside the container, to open up a shell `docker attach container_name`
+6. `cd /etc/ansible` and `ls` Ansible is a **Provisioner** 
+7. Ansible reads YAML files and can execute tasks
+8. `nano my-playbook.yml`
+9. `ansible-playbook my-playbook.yml` To run the yml script
+
+## Sample YAML-YAML ain't markup language
+
+
+
+```YAML
+---
+  - name: My first playbook
+    hosts: webservers
+    become: true
+    tasks:
+
+    - name: Install apache httpd  (state=present is optional)
+      apt:
+        name: apache2
+        state: present
+```
+- '---' specifies that the file is YAML
+- `become:true` indicates to run as root
+- `tasks` Whatever is listed under tasks will be run- In this example I am suggesting to install the apache2 software as root 
+- `state:present` IMP, Ansible will check to see if the package is already installed, if so then wont reinstall, but if the software is not installed then it will install it. Alternatively if `state: absent` then it will check to see whether the software is installed. If it is then it will delete and re-install
+
+- Apache2 is a program to install webserver
+
 ## Network Redundency -Network Design
 
 - If one server falls the network does not collapse. 
