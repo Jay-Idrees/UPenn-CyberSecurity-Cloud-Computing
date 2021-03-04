@@ -173,8 +173,31 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 ## IaaC (Infractructure as code)
 
-- Using code to configure the network
+- We can code such that a VM is a server and has many containers. `Provisioners` are used for 
 
+- Using code to configure the network and keeping track of changes to configuration. The changes are also reversible
+
+- Servers can send data to a central database, thus the servers are only composed of a small text files of code. We can even send the logs to a database
+
+- It also makes it easy to turn back an update if there are errors with new updates 
+- **Provisioners** are used for automation - bring servers to a **state of operation**
+
+
+10. **Load Balancer** 
+
+- Three step process
+
+        1. Add Load balancer using +Add to the resource group
+        2. Configure healthprob
+        3. Add your VM to the backend pool so the VMs are behind the loadbalancer's external IP
+
+- Provides an external IP for the website to be accessed over the internet and points that ip to a VM. The name of this IP should be the most uniquie in all of Azure.
+
+- Distributes traffic over multiple servers. More servers can be added to the group as traffic increases
+
+- Helps mitigating DoS attacks by having multiple servers running the same website behind a load balancer- so the traffic can go to the other server which is not hacked 
+
+- THe load balancer can perform a health probe to check whether a server is fully operational, before delegating the resoursces to it. 
 - 
 
 ## Key terminal commands
@@ -190,7 +213,13 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 8. `nano my-playbook.yml`
 9. `ansible-playbook my-playbook.yml` To run the yml script
 
+- At this point, we have created a virtual network, deployed a jump box running an Ansible Docker container, and used that container to configure another VM running a DVWA container.
+
 ## Sample YAML-YAML ain't markup language
+
+- `apt`, found at [docs.ansible.com/ansible/latest/modules/apt_module.html](https://docs.ansible.com/ansible/latest/modules/apt_module.html).
+- `pip`, found at [docs.ansible.com/ansible/latest/modules/pip_module.html](https://docs.ansible.com/ansible/latest/modules/pip_module.html).
+- `docker-container`, found at [docs.ansible.com/ansible/latest/modules/docker_container_module.html](https://docs.ansible.com/ansible/latest/modules/docker_container_module.html).
 
 
 
@@ -212,6 +241,8 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 - `state:present` IMP, Ansible will check to see if the package is already installed, if so then wont reinstall, but if the software is not installed then it will install it. Alternatively if `state: absent` then it will check to see whether the software is installed. If it is then it will delete and re-install
 
 - Apache2 is a program to install webserver
+
+
 
 ## Network Redundency -Network Design
 
