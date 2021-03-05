@@ -171,6 +171,26 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 - You can download containers created by other users- has a container hub
 
+- Connect to Jump-box `ssh admin@jump-box-ip`
+
+- Install Docker `sudo apt install docker.io` install docker and then verify `sudo systemctl status docker`, `sudo systemctl start docker` to start the program if not running
+
+> Installing bionic container
+
+- Install container `sudo docker pull cyberxsecurity/ubuntu:bionic` for interpretation: `[image_maker]/[image_name]`
+
+- Run container `sudo docker run -ti bionic/ubuntu bash`, `ti` is terminal interactive- allows to run a terminal on the container, `bash` gives shell control of the container
+
+> Likewise installing ansible
+
+- `sudo docker pull cyberxsecurity/ansible` and switch to root user `sudo su`
+
+- `docker run -ti cyberxsecurity/ansible:latest bash`
+
+- 
+
+
+
 ## IaaC (Infractructure as code)
 
 - We can code such that a VM is a server and has many containers. `Provisioners` are used for 
@@ -180,8 +200,11 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 - Servers can send data to a central database, thus the servers are only composed of a small text files of code. We can even send the logs to a database
 
 - It also makes it easy to turn back an update if there are errors with new updates 
-- **Provisioners** are used for automation - bring servers to a **state of operation**
+- **Provisioners** are used for automation (making automated changes to configuration) - bring servers to a **state of operation**
 
+- Once once server has reached that **state of operation**, this can be applied to multiple other servers
+
+- **provisioners** ansible, puppet and chef
 
 10. **Load Balancer** 
 
