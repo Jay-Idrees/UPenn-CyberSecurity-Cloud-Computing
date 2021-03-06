@@ -175,19 +175,132 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 - Install Docker `sudo apt install docker.io` install docker and then verify `sudo systemctl status docker`, `sudo systemctl start docker` to start the program if not running
 
+- List all the containers that are currently installed
+
+- `docker container list -a`. The names of the containers are radomly generated after the names of the famous developers- these names are for your specific container that was downloaded and installed
+
 > Installing bionic container
 
 - Install container `sudo docker pull cyberxsecurity/ubuntu:bionic` for interpretation: `[image_maker]/[image_name]`
 
-- Run container `sudo docker run -ti bionic/ubuntu bash`, `ti` is terminal interactive- allows to run a terminal on the container, `bash` gives shell control of the container
+- Run container `sudo docker run -ti bionic/ubuntu bash`, `ti` is terminal interactive- allows to run a terminal on the container, `bash` gives shell control of the container. Note that if this is the first time that you are running the container then you will have to use `start` instead of run for example: `sudo docker start container_name`
 
-> Likewise installing ansible
+- Run shell on a container that you installed `sudo docker attach container_name`, This is going one layer deeper from VM to container. Note that Jump-box itself is a VM -that is connected to the network
+
+> Likewise installing ansible provisioner so we can automate tasks with YAML scripts
 
 - `sudo docker pull cyberxsecurity/ansible` and switch to root user `sudo su`
 
-- `docker run -ti cyberxsecurity/ansible:latest bash`
+- `docker run -ti cyberxsecurity/ansible:latest bash` or  `docker run -it cyberxsecurity/ansible /bin/bash`  and then `exit` to leave. Selecting bash opens terminal and give you an opportunity to create a key in the container
 
-- 
+10. **Configuring the provisioners - specifically the `host` file and the `ansible.cfg`**
+
+- `ssh-keygen` inside the container and then `ls .sh/` to view  the keys files 
+
+- `cat .ssh/id_rsa.pub` to view the key
+
+- Now change the SSH key on the virtual machine for the new SSH user in Azure. Note that if only TCP connections are establishes for SSH in the security group, it will not be possible to use `ping`
+- `ping ipaddress` to test that the ssh key is working. Then `exit`
+
+- `nano /etc/ansible/hosts` Add IPs and websites in the hosts file. 
+- `nano /etc/ansible/ansible.cfg` Add a new user to the cfg file next to `remote_user` See below:
+- `ansible_python_interpreter=/usr/bin/python3` - Testing the Ansible connection - Notice how this code line is added in the hosts file next to the ip- this is for testing
+
+- hosts file
+- The machines can be grouped `[webservers]` or `[databases]` or `[workstations]`
+    ```bash
+        # This is the default ansible 'hosts' file.
+        #
+        # It should live in /etc/ansible/hosts
+        #
+        #   - Comments begin with the '#' character
+        #   - Blank lines are ignored
+        #   - Groups of hosts are delimited by [header] elements
+        #   - You can enter hostnames or ip addresses
+        #   - A hostname/ip can be a member of multiple groups
+        # Ex 1: Ungrouped hosts, specify before any group headers.
+
+        ## green.example.com
+        ## blue.example.com
+        ## 192.168.100.1
+        ## 192.168.100.10
+
+        # Ex 2: A collection of hosts belonging to the 'webservers' group
+
+        [webservers] This is where the new ips are added
+        ## alpha.example.org
+        ## beta.example.org
+        ## 192.168.1.100
+        ## 192.168.1.110
+        10.0.0.6 ansible_python_interpreter=/usr/bin/python3
+				10.0.0.7 ansible_python_interpreter=/usr/bin/python3
+        ```
+
+- `ansible.cfg`
+    ```bash
+    # What flags to pass to sudo
+    # WARNING: leaving out the defaults might create unexpected behaviours
+    #sudo_flags = -H -S -n
+
+    # SSH timeout
+    #timeout = 10
+
+    # default user to use for playbooks if user is not specified
+    # (/usr/bin/ansible will use current user as default)
+    remote_user = sysadmin
+
+    # logging is off by default unless this path is defined
+    # if so defined, consider logrotate
+    #log_path = /var/log/ansible.log
+
+    # default module name for /usr/bin/ansible
+    #module_name = command
+
+    ```
+
+- Publications
+- Clinical training with excellent letters
+- Sabik
+- Linehan
+- Biostatistician - Johns Hopkins, Ohio State University, University of Cambridge
+- USRA tech, US Electives
+- Extra-ordinary green card
+- Columbia
+- MIT
+- Email top name
+- No 24yr rule
+- Stella/Chrisy
+- Columbia
+- Fate line
+- Timing of interview invitations
+
+
+- Once on the powershell inside the container- generate ssh
+
+
+10. **Giving Jump-Box access to the VNet** - Done in Azure
+
+- Get the private IP address of your jump box.
+
+    - Go to your security group settings and create an inbound rule. Create rules allowing SSH connections from your IP address.
+
+       - Source: Use the **IP Addresses** setting with your jump box's internal IP address in the field.
+
+        - Source port ranges: **Any** or * can be listed here.
+
+        - Destination: Set to **VirtualNetwork**.
+
+        - Destination port ranges: Only allow SSH. So, only port `22`.
+
+        - Protocol: Set to **Any** or **TCP**.
+
+        - Action: Set to **Allow** traffic from your jump box.
+
+        - Priority: Priority must be a lower number than your rule to deny all traffic.
+
+        - Name: Name this rule anything you like, but it should describe the rule. For example: `SSH from Jump Box`.
+
+        - Description: Write a short description similar to: "Allow SSH from the jump box IP."
 
 
 
