@@ -1,4 +1,4 @@
-# Cloud Computing
+# Cloud Security Configuration
 
 > Benifits
 
@@ -42,6 +42,54 @@
 - The Glue that binds all the things together
 - Allows automated configuration and infrastructure management
 - Pen testers actually perform the security testing
+
+## Setting up a firewall for virtual machine
+- Can set rules on multiple ports
+**Network Security group (NSG)** to create an NSG that blocks all traffic to and from the network
+- Thhis model can allow creating a template NSG which can be modified for future VNs
+- Allow creation of NSGs for different traffic profile
+- A security group is a unique network into which you can deploy machines
+- We can use this to deploy a remote desktop on a specific port
+- 
+
+- Before setting up devices in the cloud the budget limits and the cost-control policies should be defined
+
+**AVailability Set**
+**Availability Zone**
+
+Aure limits free tire users to only 4v CPUs per region
+
+## IaaC (Infractructure as code)
+
+- We can code such that a VM is a server and has many containers. `Provisioners` are used for 
+
+- Using code to configure the network and keeping track of changes to configuration. The changes are also reversible
+
+- Servers can send data to a central database, thus the servers are only composed of a small text files of code. We can even send the logs to a database
+
+- It also makes it easy to turn back an update if there are errors with new updates 
+- **Provisioners** are used for automation (making automated changes to configuration) - bring servers to a **state of operation**
+
+- Once once server has reached that **state of operation**, this can be applied to multiple other servers
+
+- **provisioners** ansible, puppet and chef
+
+10. **Load Balancer** 
+
+- Three step process
+
+        1. Add Load balancer using +Add to the resource group
+        2. Configure healthprob
+        3. Add your VM to the backend pool so the VMs are behind the loadbalancer's external IP
+
+- Provides an external IP for the website to be accessed over the internet and points that ip to a VM. The name of this IP should be the most uniquie in all of Azure.
+
+- Distributes traffic over multiple servers. More servers can be added to the group as traffic increases
+
+- Helps mitigating DoS attacks by having multiple servers running the same website behind a load balancer- so the traffic can go to the other server which is not hacked 
+
+- THe load balancer can perform a health probe to check whether a server is fully operational, before delegating the resoursces to it. 
+
 
 ## IaaS (Infrastructure Service)
 
@@ -106,16 +154,10 @@
         4. You should use the same admin name for all 3 machines.
         5. Make sure to take a note of this username, as you will need it to login later.
 
-5. **SSH setup**
-
-- Generating the SSH key
-- Pasting the SSH key inside the Setting of the VM, so that it maybe connected
-
-- A network behind the gateway is more secure
 
 
 
-6. **Connecting to a VM using SSH** This is the same as **Configuring a VPN - Virtual Private Network** or **Setting up a jump box**
+5. **Setting up a Jump Box, Connecting to a VM using SSH** This is the same as **Configuring a VPN - Virtual Private Network**
 
  - **Gateway router** or **Jump-box** between the VMs on a VNet forces all traffic through a single node `fanning inn`
 
@@ -143,8 +185,41 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 - Connect SSH using `ssh admin-username@VM-public-IP` This is done using gitbash
 
 
+6. **Giving Jump-Box access to the VNet** - Done in Azure
 
-8. **Containers** - Low scale VMs - (Because they have no OS or hardware of their own)- Easily duplicated
+- Get the private IP address of your jump box.
+
+    - Go to your security group settings and create an inbound rule. Create rules allowing SSH connections from your IP address.
+
+       - Source: Use the **IP Addresses** setting with your jump box's internal IP address in the field.
+
+        - Source port ranges: **Any** or * can be listed here.
+
+        - Destination: Set to **VirtualNetwork**.
+
+        - Destination port ranges: Only allow SSH. So, only port `22`.
+
+        - Protocol: Set to **Any** or **TCP**.
+
+        - Action: Set to **Allow** traffic from your jump box.
+
+        - Priority: Priority must be a lower number than your rule to deny all traffic.
+
+        - Name: Name this rule anything you like, but it should describe the rule. For example: `SSH from Jump Box`.
+
+        - Description: Write a short description similar to: "Allow SSH from the jump box IP."
+
+
+7. **Docker, Container and Provisioners in the Jump-Box** - Low scale VMs - (Because they have no OS or hardware of their own)- Easily duplicated
+
+- Some basic navigational commands. Note that the containers are setup using the docker (See below), that will need to be installed before the container can be installed. One of the container that we install is `Asible` Which helps with automation of the containers on large scale by arranging the VMs into the groups.
+
+- Steps go like this. Connect to Jump Box, install docker, install container, open the container using the name of the container, run the terminal in the container, install ansible, obtain SSH key, Update the Azure SSH key, Make updates to the host file in Asible for automation. Configure a load balancer and then configure firewall. Then you can decide if you can want to make additional VMs
+
+- `sudo docker container list -a` to see the name of your container
+- `sudo docker ps` to view running containers
+- `docker attach container_name` to open shell
+- `cd /etc/ansible` `ls` To view fies
 
 - Typically, you design a VM and then create containers inside it (e-g 100 containers), containers can also be automatically created. 
 
@@ -163,9 +238,11 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 - The Purpose is to share common resources and create a new image of only what is different- Thats the purpose of the container
 
-- The main different between the multiple containers and the multiple VMs which are copies of the same original image that the containers can share some files or be connected to the same resources, while the VMs are completely independent. Both the VMs and the conainers can share the same host (Virtual network)
+- The main different between the multiple containers and the multiple VMs which are copies of the same original image that the containers can share some files or be connected to the same resources, while the VMs are completely independent. Both the VMs and the conainers can share the same host (Virtual network).
 
-9. **Docker** - Program to make and manage custom containers
+
+
+8. **Docker** - Program to make and manage custom containers
 
 - Makes it easy to install complex server configurations
 
@@ -177,15 +254,15 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 - List all the containers that are currently installed
 
-- `docker container list -a`. The names of the containers are radomly generated after the names of the famous developers- these names are for your specific container that was downloaded and installed
+- `docker container list -a` and `sudo docker ps` for getting the name of the containers and to list the containers that are actively running. The names of the containers are radomly generated after the names of the famous developers- these names are for your specific container that was downloaded and installed
 
-> Installing bionic container
+> EXAMPLE: Installing bionic container
 
 - Install container `sudo docker pull cyberxsecurity/ubuntu:bionic` for interpretation: `[image_maker]/[image_name]`
 
-- Run container `sudo docker run -ti bionic/ubuntu bash`, `ti` is terminal interactive- allows to run a terminal on the container, `bash` gives shell control of the container. Note that if this is the first time that you are running the container then you will have to use `start` instead of run for example: `sudo docker start container_name`
+- Run container for the second time `sudo docker run -ti bionic/ubuntu bash`, `ti` is terminal interactive- allows to run a terminal on the container, `bash` or `bin/bash` gives shell control of the container. Note that if this is the first time that you are running the container then you will have to use `start` instead of run for example: `sudo docker start container_name`
 
-- Run shell on a container that you installed `sudo docker attach container_name`, This is going one layer deeper from VM to container. Note that Jump-box itself is a VM -that is connected to the network
+- `sudo docker attach container_name` - opens shell/terminal inside the container, This is going one layer deeper from VM to container. Note that Jump-box itself is a VM -that is connected to the network
 
 > Likewise installing ansible provisioner so we can automate tasks with YAML scripts
 
@@ -193,7 +270,9 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 - `docker run -ti cyberxsecurity/ansible:latest bash` or  `docker run -it cyberxsecurity/ansible /bin/bash`  and then `exit` to leave. Selecting bash opens terminal and give you an opportunity to create a key in the container
 
-10. **Configuring the provisioners - specifically the `host` file and the `ansible.cfg`**
+
+
+9. **Configuring Ansible (Provisioner) - specifically the `host` file and the `ansible.cfg`**
 
 - `ssh-keygen` inside the container and then `ls .sh/` to view  the keys files 
 
@@ -205,6 +284,8 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 - `nano /etc/ansible/hosts` Add IPs and websites in the hosts file. 
 - `nano /etc/ansible/ansible.cfg` Add a new user to the cfg file next to `remote_user` See below:
 - `ansible_python_interpreter=/usr/bin/python3` - Testing the Ansible connection - Notice how this code line is added in the hosts file next to the ip- this is for testing
+
+- Testing : `ansible webservers -m ping` or `ansible all -m ping`
 
 - hosts file
 - The machines can be grouped `[webservers]` or `[databases]` or `[workstations]`
@@ -258,83 +339,65 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
     ```
 
-- Publications
-- Clinical training with excellent letters
-- Sabik
-- Linehan
-- Biostatistician - Johns Hopkins, Ohio State University, University of Cambridge
-- USRA tech, US Electives
-- Extra-ordinary green card
-- Columbia
-- MIT
-- Email top name
-- No 24yr rule
-- Stella/Chrisy
-- Columbia
-- Fate line
-- Timing of interview invitations
+There are Ansible modules for almost anything we can think of. For example:
+- Create files and folders.
+- Start, stop, and download Docker containers.
+- Change system settings.
+- Download code from Github.
+- Create compressed archives of files.
+
+- **Summary of Ansible Configuration**
+
+1. `docker container list -a`
+2. `docker start [container_name]`
+3. `docker attach [container_name]` Now we are inside the container
+4. `nano /etc/ansible/pentest.yml`
+5. Paste the code below in the pentest.yml file and run `ansible-playbook /etc/ansible/pentest.yml`
+6. `ssh sysadmin@10.0.0.6` ssh to the container
+7. `curl localhost/setup.php` to test the connection
+
+ Your final playbook should read similar to:
+
+    ```YAML
+    ---
+    - name: Config Web VM with Docker
+      hosts: webservers                     // all the tasks will be run on all the VMs listed under webservers
+      become: true
+      tasks:                               // Notice all the tasks listed below for Ansible to run
+      - name: docker.io
+        apt:
+          force_apt_get: yes
+          update_cache: yes               // This will run apt update - required for installing docker.io
+          name: docker.io                // This will install docker.io
+          state: present
+
+      - name: Install pip3
+        apt:
+          force_apt_get: yes
+          name: python3-pip               // This will install python3-php- package manager for python
+          state: present
+
+      - name: Install Docker python module
+        pip:
+          name: docker               // It lets Ansible control containers by controling docker
+          state: present
+
+      - name: download and launch a docker web container
+        docker_container:
+          name: dvwa                 // This is installing the dvwa(dam vulnerable web app)
+          image: cyberxsecurity/dvwa
+          state: started
+          restart_policy: always     // Instructs container to restart automatically when the VM restarts
+          published_ports: 80:80        // publish port `80` on the container to port `80` on the host
+
+      - name: Enable docker service
+        systemd:                        // Restarts docker when the machine reboots
+          name: docker
+          enabled: yes
+    ```
 
 
-- Once on the powershell inside the container- generate ssh
 
-
-10. **Giving Jump-Box access to the VNet** - Done in Azure
-
-- Get the private IP address of your jump box.
-
-    - Go to your security group settings and create an inbound rule. Create rules allowing SSH connections from your IP address.
-
-       - Source: Use the **IP Addresses** setting with your jump box's internal IP address in the field.
-
-        - Source port ranges: **Any** or * can be listed here.
-
-        - Destination: Set to **VirtualNetwork**.
-
-        - Destination port ranges: Only allow SSH. So, only port `22`.
-
-        - Protocol: Set to **Any** or **TCP**.
-
-        - Action: Set to **Allow** traffic from your jump box.
-
-        - Priority: Priority must be a lower number than your rule to deny all traffic.
-
-        - Name: Name this rule anything you like, but it should describe the rule. For example: `SSH from Jump Box`.
-
-        - Description: Write a short description similar to: "Allow SSH from the jump box IP."
-
-
-
-## IaaC (Infractructure as code)
-
-- We can code such that a VM is a server and has many containers. `Provisioners` are used for 
-
-- Using code to configure the network and keeping track of changes to configuration. The changes are also reversible
-
-- Servers can send data to a central database, thus the servers are only composed of a small text files of code. We can even send the logs to a database
-
-- It also makes it easy to turn back an update if there are errors with new updates 
-- **Provisioners** are used for automation (making automated changes to configuration) - bring servers to a **state of operation**
-
-- Once once server has reached that **state of operation**, this can be applied to multiple other servers
-
-- **provisioners** ansible, puppet and chef
-
-10. **Load Balancer** 
-
-- Three step process
-
-        1. Add Load balancer using +Add to the resource group
-        2. Configure healthprob
-        3. Add your VM to the backend pool so the VMs are behind the loadbalancer's external IP
-
-- Provides an external IP for the website to be accessed over the internet and points that ip to a VM. The name of this IP should be the most uniquie in all of Azure.
-
-- Distributes traffic over multiple servers. More servers can be added to the group as traffic increases
-
-- Helps mitigating DoS attacks by having multiple servers running the same website behind a load balancer- so the traffic can go to the other server which is not hacked 
-
-- THe load balancer can perform a health probe to check whether a server is fully operational, before delegating the resoursces to it. 
-- 
 
 ## Key terminal commands
 
@@ -351,7 +414,9 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 
 - At this point, we have created a virtual network, deployed a jump box running an Ansible Docker container, and used that container to configure another VM running a DVWA container.
 
-## Sample YAML-YAML ain't markup language
+## Sample YAML-YAML ain't markup language 
+
+- These are used by Asible or similar provisioners for automation
 
 - `apt`, found at [docs.ansible.com/ansible/latest/modules/apt_module.html](https://docs.ansible.com/ansible/latest/modules/apt_module.html).
 - `pip`, found at [docs.ansible.com/ansible/latest/modules/pip_module.html](https://docs.ansible.com/ansible/latest/modules/pip_module.html).
@@ -389,62 +454,3 @@ Source: Use the IP Addresses setting, with your IP address in the field.
 - Similarly adding multiple databases also increases the redundancy but increases **Attack Surface**
 - We can also add a `SIEM - Securty infromation and event management` before the log database. These perform realtime analysis of the log and other services of inrusion detection
 
-
-## Activities:
-
-- Setting up virtual network
-- Setting up inbound an outbound rules
-
-
-## Setting up a virtual machine using Azure
-
-## Setting up a firewall for virtual machine
-- Can set rules on multiple ports
-**Network Security group (NSG)** to create an NSG that blocks all traffic to and from the network
-- Thhis model can allow creating a template NSG which can be modified for future VNs
-- Allow creation of NSGs for different traffic profile
-- A security group is a unique network into which you can deploy machines
-- We can use this to deploy a remote desktop on a specific port
-- 
-
-- Before setting up devices in the cloud the budget limits and the cost-control policies should be defined
-
-**AVailability Set**
-**Availability Zone**
-
-Aure limits free tire users to only 4v CPUs per region
-
-In summary, an Availability Set is a group of VMs, where each VM is in a different Availability Zone. If one of the Availability Zones goes down, the VM in the other picks up the workload.
-
-Note: Azure limits free tier users to only 4 vCPUs per Region. Notice that the default machine will normally have 2 vCPUs and 8 GiB of memory. For this jump box, the machine size should be changed to a smaller machine to conserve resources.
-
-The Jump-Box machine only needs 1 vCpu and 1 GiB of memory.
-
- SSH key pair to access our new machine 
-
- IMPORTANT: Windows users should be using GitBash to use these commands and create ssh connections.
-
-Open a terminal and run ssh-keygen.
-
-You will be prompted to save the SSH key into the default directory ~/.ssh/id_rsa. DO NOT CHANGE THIS LOCATION. Press the Enter key.
-Run cat ~/.ssh/id_rsa.pub to show our id_rsa.pub key:
-
-
-Copy the SSH key string and paste it into the Administrator Account section on the Basics page for the VM in Azure.
-
-For SSH public key source select Use existing public key from the drop down.
-You will use the same SSH key for every machine you create today. Later we will change the key on a few machines.
-
-
-We created the network and blocked all traffic before placing any VM's inside of it.
-
-This ensures that it is truly impossible for an attacker to gain access during the configuration process.
-Then, we added an SSH key through secure methods, ensuring that only the user with the correct private key (you) will be able to connect to the machine.
-
-Still, this private key is essentially useless until the NSG is updated to allow SSH traffic.
-
-This further protects the machines on the network by ensuring they can't be accessed, by the private key owner or any attacker who intercepted it, until the cloud administrator explicitly allows such access.
-
-In the next class, we'll update the NSG, following the principle of least privilege, to allow only inbound SSH traffic.
-
-We will configure the NSG so it only allows one IP address to open connections. This will ensure that if an attacker steals the key remotely, they will only be able to connect to the VM if they also successfully compromise your development machine.
