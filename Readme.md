@@ -487,12 +487,18 @@ There are Ansible modules for almost anything we can think of. For example:
 
 5. **At this point I have a VNet protected by the security group that blocks all traffic. No virtual machine is added yet, but the Goal is to create 3 machines in the same resource group**
 
-6. Set up cryptographic **SSH keys** to access cloud servers, Passwords are weak because they can be brute forced. This is called `ground up security`. key commands: `ssh-keygen`, Do not enter any password and press enter twice,`cat ~/.ssh/id_rsa.pub`- to view the key. 
+6. Set up cryptographic **SSH keys** to access cloud servers, Passwords are weak because they can be brute forced. This is called `ground up security`. key commands: `ssh-keygen`, Do not enter any password and press enter twice,`cat ~/.ssh/id_rsa.pub`- to view the key. I did this on my laptop 
 
 7. So far I only have a VNet-no VM, Create a new Virtual Machine in Azure using +Add: Specify the resource group(Red-Team), Call this first VM **Jump-Box-Provisioner VM**. Be consistent with the region selected. I am on track to create 3 VMs - imp-these should share the same resource group and the region and the security group
 
 8. **Jump-Box-Provisioner VM settings**: Image: Ubuntu Server 18.04, Standard-B1s 1CPU and 1RAM (Jump-Box needs only 1 ram). Create a `username (RedAdmin)` and associate the SSH public key with it. Paste the public SSH key. I am not using password. Allow `SSH(22)` port for inbound. use advanced option for security group under the networking tab for custom configuration of the security group. You can also have the same username for all 3 machines
 
-9. Create **2 more VMs (Web-1, Web-2)**. Same Resource group, Same Region, Same Network Security Group. For the time being I will be using the same SSH key,later these will be replaced. For specification select "Standard-B1ms". Free Azure account only allows 4 virtual machines. The new VMs should have the same availability set. This is important so all the machines can be added to the load balancer later- Use the same availability set name. Select public IPs for these virtual machines as none. 
+9. Create **2 more VMs (Web-1, Web-2)**. Same Resource group, Same Region, Same Network Security Group. For the time being I will be using the same SSH key,later these will be replaced. For specification select "Standard-B1ms". Free Azure account only allows 4 virtual machines. The new VMs should have the **same availability set**. This is important so all the machines can be added to the load balancer later- Use the same availability set name. Select public IPs for these virtual machines as none. 
 
-10. Create **Security group rule-Allow IP** to allow SSH connection to my current IP address. I can get my current IP from the [whatsmyi.org](whatsmyip.org)
+10. Create **Security group rule-Allow IP** to allow SSH connection to my current IP address. I can get my current IP from the [whatsmyi.org](whatsmyip.org). This is done by selecting `inbound security rule`. Paste the ip under source IP addresses. 
+
+11. Then afer saving, test it with git bash `ssh admin-username@VM-public-IP`, `sudo -l` to check that your admin has sudo access without requiring password. This is allowing my laptop's ip to connect with the Jump-Box
+
+12. **Now I have 3 VMs one is Jump-Box-Provisioner, others are Web-1 and Web-2 and I have setup SSH on my laptop and added security rules to allow me to connect to the Jump-Box using my specific ip address**
+
+13. Now I am connected to Jump-Box via SSH. I am now Configuring the Jump-Box-Provisioner so I can install and run Docker and the containers installed in it. Note that right now I am going to install it manually, but later I will use the YAML files to install using the Ansible provisioner from the Jump-Box. Run `sudo apt update` then `sudo apt install docker.io`
