@@ -43,18 +43,16 @@
 - Allows automated configuration and infrastructure management
 - Pen testers actually perform the security testing
 
-## Setting up a firewall for virtual machine
+## Setting up a firewall for virtual machineS
 - Can set rules on multiple ports
 **Network Security group (NSG)** to create an NSG that blocks all traffic to and from the network
 - Thhis model can allow creating a template NSG which can be modified for future VNs
 - Allow creation of NSGs for different traffic profile
 - A security group is a unique network into which you can deploy machines
 - We can use this to deploy a remote desktop on a specific port
-- 
-
 - Before setting up devices in the cloud the budget limits and the cost-control policies should be defined
 
-**AVailability Set**
+**AVailability Set** <br>
 **Availability Zone**
 
 Aure limits free tire users to only 4v CPUs per region
@@ -74,21 +72,7 @@ Aure limits free tire users to only 4v CPUs per region
 
 - **provisioners** ansible, puppet and chef
 
-10. **Load Balancer** 
 
-- Three step process
-
-        1. Add Load balancer using +Add to the resource group
-        2. Configure healthprob
-        3. Add your VM to the backend pool so the VMs are behind the loadbalancer's external IP
-
-- Provides an external IP for the website to be accessed over the internet and points that ip to a VM. The name of this IP should be the most uniquie in all of Azure.
-
-- Distributes traffic over multiple servers. More servers can be added to the group as traffic increases
-
-- Helps mitigating DoS attacks by having multiple servers running the same website behind a load balancer- so the traffic can go to the other server which is not hacked 
-
-- THe load balancer can perform a health probe to check whether a server is fully operational, before delegating the resoursces to it. 
 
 
 ## IaaS (Infrastructure Service)
@@ -396,8 +380,43 @@ There are Ansible modules for almost anything we can think of. For example:
           enabled: yes
     ```
 
+10. **Load Balancer** 
+
+- Three step process
+
+        1. Add Load balancer using +Add to the resource group
+        2. Add and Configure healthprob to the load balancer
+        3. Create a backend pool and add Vms so the VMs are behind the loadbalancer's external IP
+        4. You can decide how many loadbalancers you can use
+
+- **backend pool** is the servers that the load balancer is connected to and can transfer the traffic
+
+- Provides an external IP for the website to be accessed over the internet and points that ip to a VM. The name of this IP should be the most uniquie in all of Azure.
+
+- Distributes traffic over multiple servers. More servers can be added to the group as traffic increases
+
+- Helps mitigating DoS attacks by having multiple servers running the same website behind a load balancer- so the traffic can go to the other server which is not hacked 
+
+- THe load balancer can perform a **health probe** to check whether a server is fully operational, before delegating the resoursces to it. 
+
+11. **Configuring  firewall**
+
+- Create a load balancing rule 
+
+- This can be done by opening load balnacer and then adding **load balancing rules**
+
+- You have to define rule such that only port `80` is exposed ot the internet
+
+- Create a new security group rule to allow port 80 to your internal VNet and remove the security group rule that blocks all traffic
+
+- Now run the ip on a web-browser to see that you can get to DVWA
 
 
+12. **Redundancy**
+
+- Create a new VM and add it behind a load balancer-Redundancy is have an exact copy of something- in this case DVWA server
+
+- See activity- good. 
 
 ## Key terminal commands
 
@@ -454,3 +473,26 @@ There are Ansible modules for almost anything we can think of. For example:
 - Similarly adding multiple databases also increases the redundancy but increases **Attack Surface**
 - We can also add a `SIEM - Securty infromation and event management` before the log database. These perform realtime analysis of the log and other services of inrusion detection
 
+
+## Overall steps in Azure for configuring a secure cloud network for an organization
+
+1. Create a **resource group** (Red-Team)
+
+2. Create a **VNet**(RedTeamNet) and link it to the resource group(RedTeam)
+     - Specidy the IP address and subnet and disable the security options if you do not want to pay extra
+
+3. Setup a **network security group** (RedTeam-SG) - Add inboud security rule to block all traffic (deny)
+
+4. Add a new inbound **security rule** to configure the network security group just created - Block all traffic- This is the default deny rule that should get the highest priority (4096) - This is the default deny- Everything is blocked. We can also block all ports by specifying range like `0-65535`
+
+5. **At this point I have a VNet protected by the security group that blocks all traffic. No virtual machine is added yet, but the Goal is to create 3 machines in the same resource group**
+
+6. Set up cryptographic **SSH keys** to access cloud servers, Passwords are weak because they can be brute forced. This is called `ground up security`. key commands: `ssh-keygen`, Do not enter any password and press enter twice,`cat ~/.ssh/id_rsa.pub`- to view the key. 
+
+7. So far I only have a VNet-no VM, Create a new Virtual Machine in Azure using +Add: Specify the resource group(Red-Team), Call this first VM **Jump-Box-Provisioner VM**. Be consistent with the region selected. I am on track to create 3 VMs - imp-these should share the same resource group and the region and the security group
+
+8. **Jump-Box-Provisioner VM settings**: Image: Ubuntu Server 18.04, Standard-B1s 1CPU and 1RAM (Jump-Box needs only 1 ram). Create a `username (RedAdmin)` and associate the SSH public key with it. Paste the public SSH key. I am not using password. Allow `SSH(22)` port for inbound. use advanced option for security group under the networking tab for custom configuration of the security group. You can also have the same username for all 3 machines
+
+9. Create **2 more VMs (Web-1, Web-2)**. Same Resource group, Same Region, Same Network Security Group. For the time being I will be using the same SSH key,later these will be replaced. For specification select "Standard-B1ms". Free Azure account only allows 4 virtual machines. The new VMs should have the same availability set. This is important so all the machines can be added to the load balancer later- Use the same availability set name. Select public IPs for these virtual machines as none. 
+
+10. Create **Security group rule-Allow IP** to allow SSH connection to my current IP address. I can get my current IP from the [whatsmyi.org](whatsmyip.org)
