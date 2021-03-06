@@ -501,4 +501,8 @@ There are Ansible modules for almost anything we can think of. For example:
 
 12. **Now I have 3 VMs one is Jump-Box-Provisioner, others are Web-1 and Web-2 and I have setup SSH on my laptop and added security rules to allow me to connect to the Jump-Box using my specific ip address**
 
-13. Now I am connected to Jump-Box via SSH. I am now Configuring the Jump-Box-Provisioner so I can install and run Docker and the containers installed in it. Note that right now I am going to install it manually, but later I will use the YAML files to install using the Ansible provisioner from the Jump-Box. Run `sudo apt update` then `sudo apt install docker.io`
+13. Now I am connected to Jump-Box via SSH. I am now Configuring the Jump-Box-Provisioner so I can install and run Docker so that I can intern install containers. Note that right now I am going to install it manually, but later I will use the YAML files to install using the Ansible provisioner from the Jump-Box. 
+- Run `sudo apt update` then 
+- `sudo apt install docker.io`
+- `sudo systemctl status docker` to check that docker is running before I can download containers
+- `sudo systemctl start docker` if the docker is not running
