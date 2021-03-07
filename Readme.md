@@ -510,5 +510,8 @@ There are Ansible modules for almost anything we can think of. For example:
 - `docker run -ti cyberxsecurity/ansible:latest bash` This goes a layer deep and switches to terminl in Ansible container
 
 
-**13**. Security group rule to give **Jump-Box-Provisioner access to VNet**. This is similar to the rule used in **10**. This is an important step as this is essentially connecting the remaining 2 VMs to the Jump-Box-Provisioner. So I can use the Ansible in the Jumpbox to also control the containers in the other 2 VMs (Web-1 and Web-2) 
+**13**. Add Network Security group rule to give **Jump-Box-Provisioner SSH access to VNet**. This is similar to the rule used in **10**. This is an important step as this is essentially connecting the remaining 2 VMs to the Jump-Box-Provisioner. So I can use the Ansible in the Jumpbox to also control the containers in the other 2 VMs (Web-1 and Web-2). Note that this rule is tied to the VNet. By adding the rule, I am telling the network security 'guard' that let Jump-Box-Provisioner VM whose IP is xx.xx.xx.xx connect to the network via SSH using the port 22
+- Use the PRIVATE IP of Jump-box-Provisioner as assigned when it was created- It can be seen at 'overview' in left column when you select the Jump-Box. 
+- Destination will be the virtual network, Destination port 22 (with which the Jump-Box will connect with other VMs)
+- Paste the PRIVATE IP. 
 
