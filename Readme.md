@@ -499,7 +499,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 11. **Establish SSH Connection with Jump-Box-Provisioner VM** Then afer saving, test it with git bash `ssh admin-username@VM-public-IP`, `sudo -l` to check that your admin has sudo access without requiring password. This is allowing my laptop's ip to connect with the Jump-Box
 
-12. **Now I have 3 VMs one is Jump-Box-Provisioner, others are Web-1 and Web-2 and I have setup SSH on my laptop and added security rules to allow me to connect to the Jump-Box using my specific ip address**
+12. **Now I have one is Jump-Box-Provisioner, others VMs to be created are Web-1 and Web-2 and together these three make the 3 VMs on the VNet and I have setup SSH on my laptop and added security rules to allow me to connect to the Jump-Box using my specific ip address**
 
 13. Now I am connected to Jump-Box-Provisioner via SSH-So far it does not have any provisioner function- and everyting below will happen in the Jump-Box-Provisioner which right now is just a VM. I first have to install docker in this VM which will let me install containers. Then I am going to download a container called Ansible which itself will act as a provisioner and will control other containers. Note that right now I am going to install it manually, but later I will use the YAML files to install programs and containers. Because after Ansible provisioner is up and running it can read YAML files and that is how it automates the process of installing new programs and containers-By reading YAML files- where we can assign tasks including installing a particular container. As I do not have ansible installed yet so for the first time I have to do this manually. Note that if I do not want to use `sudo` every time I can switch to root with `sudo su`
 - Run `sudo apt update` then 
@@ -514,4 +514,6 @@ There are Ansible modules for almost anything we can think of. For example:
 - Use the PRIVATE IP of Jump-box-Provisioner as assigned when it was created- It can be seen at 'overview' in left column when you select the Jump-Box. 
 - Destination will be the virtual network, Destination port 22 (with which the Jump-Box will connect with other VMs)
 - Paste the PRIVATE IP. 
+
+14. To quickly summarize. I used SSH to connect to Jump-Box-Provisioner and then in it install docker, and ansible container and I then granted Jump-Box-Provisioner SSH access to the VNet- which is in escense the remaining VMs (Web-1 and Web-2- that will be created soon in the VNet). Now I can use the terminal inside to Jump-Box to install containers on other VMs
 
