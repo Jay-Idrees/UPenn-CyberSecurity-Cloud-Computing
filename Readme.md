@@ -483,7 +483,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 3. Setup a **network security group** (RedTeam-SG) - Add inboud security rule to block all traffic (deny)
 
-4. Add a new inbound **security rule** to configure the network security group just created - Block all traffic- This is the default deny rule that should get the highest priority (4096) - This is the default deny- Everything is blocked. We can also block all ports by specifying range like `0-65535`
+**4.** Add a new inbound **security rule** to configure the network security group just created - Block all traffic- This is the default deny rule that should get the highest priority (4096) - This is the default deny- Everything is blocked. We can also block all ports by specifying range like `0-65535`
 
 5. **At this point I have a VNet protected by the security group that blocks all traffic. No virtual machine is added yet, but the Goal is to create 3 machines in the same resource group**
 
@@ -495,16 +495,20 @@ There are Ansible modules for almost anything we can think of. For example:
 
 9. Create **2 more VMs (Web-1, Web-2)**. Same Resource group, Same Region, Same Network Security Group. For the time being I will be using the same SSH key,later these will be replaced. For specification select "Standard-B1ms". Free Azure account only allows 4 virtual machines. The new VMs should have the **same availability set**. This is important so all the machines can be added to the load balancer later- Use the same availability set name. Select public IPs for these virtual machines as none. 
 
-10. Create **Security group rule-Allow IP** to allow SSH connection to my current IP address. I can get my current IP from the [whatsmyi.org](whatsmyip.org). This is done by selecting `inbound security rule`. Paste the ip under source IP addresses. Call this rule **SSH**. Note that the port is asigned to `22` Here I am configuring that all IPs should be blocked as previously configured, but this particular IP xx.xx.xx.xx should be allowed to connect to the VNet via the port 22. 
+**10.** Create **Security group rule-Allow IP** to allow SSH connection to my current IP address. I can get my current IP from the [whatsmyi.org](whatsmyip.org). This is done by selecting `inbound security rule`. Paste the ip under source IP addresses. Call this rule **SSH**. Note that the port is asigned to `22` Here I am configuring that all IPs should be blocked as previously configured, but this particular IP xx.xx.xx.xx should be allowed to connect to the VNet via the port 22. 
 
 11. Then afer saving, test it with git bash `ssh admin-username@VM-public-IP`, `sudo -l` to check that your admin has sudo access without requiring password. This is allowing my laptop's ip to connect with the Jump-Box
 
 12. **Now I have 3 VMs one is Jump-Box-Provisioner, others are Web-1 and Web-2 and I have setup SSH on my laptop and added security rules to allow me to connect to the Jump-Box using my specific ip address**
 
-13. Now I am connected to Jump-Box-Provisioner via SSH- and everyting below will happen in the Jump-Box-Provisioner. I am now Configuring the Jump-Box-Provisioner so I can install and run Docker so that I can intern install additional containers. Note that right now I am going to install it manually, but later I will use the YAML files to install using the Ansible provisioner from the Jump-Box. As I do not have ansible installed yet so I have to do this manually the first time. Note that if I do not want to use `sudo` every time I can switch to root with `sudo su`
+13. Now I am connected to Jump-Box-Provisioner via SSH-So far it does not have provisioner function- and everyting below will happen in the Jump-Box-Provisioner which right now is just a VM. I am going to download a container called Ansible which itself will act as a provisioner and will control other containers. I am now Configuring the Jump-Box-Provisioner so I can install and run Docker which is a requirement for installing any container. Note that right now I am going to install it manually, but later I will use the YAML files to install programs and containers. Because after Ansible provisioner is up and running it can read YAML files and that is how it automates the process of installing new programs and containers-By reading YAML files. As I do not have ansible installed yet so I have to do this manually the first time. Note that if I do not want to use `sudo` every time I can switch to root with `sudo su`
 - Run `sudo apt update` then 
 - `sudo apt install docker.io`
 - `sudo systemctl status docker` to check that docker is running before I can download containers
 - `sudo systemctl start docker` if the docker is not running
 - `sudo docker pull cyberxsecurity/ansible` to download Ansible provisioner
 - `docker run -ti cyberxsecurity/ansible:latest bash` This goes a layer deep and switches to terminl in Ansible container
+
+
+13. Security group rule to give **Jump-Box-Provisioner access to VNet**. This is similar to the rule used in 
+
