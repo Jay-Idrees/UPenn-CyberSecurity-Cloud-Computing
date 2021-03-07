@@ -510,5 +510,5 @@ There are Ansible modules for almost anything we can think of. For example:
 - `docker run -ti cyberxsecurity/ansible:latest bash` This goes a layer deep and switches to terminl in Ansible container
 
 
-13. Security group rule to give **Jump-Box-Provisioner access to VNet**. This is similar to the rule used in 
+**13**. Security group rule to give **Jump-Box-Provisioner access to VNet**. This is similar to the rule used in 
 
