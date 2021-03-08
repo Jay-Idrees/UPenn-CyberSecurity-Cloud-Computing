@@ -525,5 +525,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 17. Inside powershell of Web-1 VM type `docker images` and then `docker run -it cyberxsecurity/ansible /bin/bash` to create + open ansible along with powershell in the container after connecting to Web-1. This will change the prompt Notice that I used `run` here instead of `start` because run also installs the container in addition to running the container. I may have to pull it first, then this image will be installed by run (see 17) 
 
-18. Inside powershell of Web-1 VM **new SSH key- Third** `ssh-keygen` and `cat .ssh/id_rsa.pub `, copy this key and then update it on Azure 
+18. Inside container powershell of Web-1 VM **new SSH key- Third** `ssh-keygen` and `cat .ssh/id_rsa.pub `, copy this key and then update it on Azure, afterwards you can test it with `ping ipaddress`
+
+
 
