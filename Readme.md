@@ -519,5 +519,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 15. Next, I am going to create a new VM called Web-1 in Azure
 
-16. Connect to the Web-1 VM using SSH and generate a new ssh key -Note that you can also do this while you are inside the Jump-box-provisioner . Paste this key under the change password for the Web-1 VM
+16. Connect to the Web-1 VM using SSH after generating a new ssh key -Note that you can also do this while you are inside the Jump-box-provisioner. It does not matter where, as the connection is really established by the SSH key. Paste this key under the change password for the Web-1 VM. Note that if you create the new VM as a copy of the previous one then it wil already have docker and ansible installed. Otherwise you will have to re-install it. 
+
+17
 
