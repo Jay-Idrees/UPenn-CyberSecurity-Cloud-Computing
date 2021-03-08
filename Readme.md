@@ -507,7 +507,7 @@ There are Ansible modules for almost anything we can think of. For example:
 - `sudo systemctl status docker` to check that docker is running before I can download containers
 - `sudo systemctl start docker` if the docker is not running
 - `sudo docker pull cyberxsecurity/ansible` to download Ansible provisioner
-- `docker run -ti cyberxsecurity/ansible:latest bash` This goes a layer deep and switches to terminl in Ansible container
+- `docker run -ti cyberxsecurity/ansible:latest bash` This goes a layer deep and switches to terminl in Ansible container (Note that `run` is a combination of create+start a container)
 
 
 **13**. Add Network Security group rule to give **Jump-Box-Provisioner SSH access to VNet**. This is similar to the rule used in **10**. This is an important step as this is essentially connecting the remaining 2 VMs(to be created) to the Jump-Box-Provisioner. So I can use the Ansible in the Jumpbox to also control the containers in the other 2 VMs (Web-1 and Web-2). Note that this rule is tied to the VNet. By adding the rule, I am telling the network security 'guard' that let Jump-Box-Provisioner VM whose IP is xx.xx.xx.xx connect to the network via SSH using the port 22
@@ -519,9 +519,11 @@ There are Ansible modules for almost anything we can think of. For example:
 
 15. Next, I am going to create a new VM called Web-1 in Azure
 
-16. Then, After I am connected to the **Jump-Box-Provisioner**, in its Ansible container, I am going to create a **new SSH key** and then I will paste this SSH key in Azure for the Web-1 VM so that now this Vm can only be accessed from within Ansible container in the Jump-Box-Provisional
+16. Then, After I am connected to the **Jump-Box-Provisioner**, in its Ansible container, I am going to create a **new SSH key** and then I will paste this SSH key in Azure for the Web-1 VM so that now this VM can only be accessed from within Ansible container in the Jump-Box-Provisional. This adds an extra layer of security. 
 
-17. `docker run -it cyberxsecurity/ansible /bin/bash` to open powershell inside the ansible container after connecting to Web-1
+17. Connect with the Web-1 VM using the ansible in Jump-Box-Provisioner using  `ssh admin@jump-box-ip`. Recap: May need:  `sudo apt install docker.io`, `sudo docker pull cyberxsecurity/ansible` and switch to root user `sudo su`, `docker run -ti cyberxsecurity/ansible:latest bash` or  `docker run -it cyberxsecurity/ansible /bin/bash`  and then `exit` to leave. Selecting bash opens terminal and give you an opportunity to create a key in the container
+
+17. `docker run -it cyberxsecurity/ansible /bin/bash` to create + open powershell inside the ansible container after connecting to Web-1. Notice that I used `run` here instead of `start` because run also installs the container. I may have to pull it first, then this image will be installed by run
 
 18. Create a new SSH key inside the Ansible container that is now inside Web-1, copy this key and then update it. 
 
