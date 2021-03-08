@@ -523,7 +523,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 17. Connect with the Web-1 VM using the ansible in Jump-Box-Provisioner using  `ssh admin@jump-box-ip`. Recap: May need:  `sudo apt install docker.io`, `sudo docker pull cyberxsecurity/ansible` and switch to root user `sudo su`, `docker run -ti cyberxsecurity/ansible:latest bash` or  `docker run -it cyberxsecurity/ansible /bin/bash` (as mentioned below)  and then `exit` to leave. Selecting bash opens terminal and give you an opportunity to create a key in the container
 
-17. Inside powershell of Web-1 VM type `docker images` and then `docker run -it cyberxsecurity/ansible /bin/bash` to create + open ansible along with powershell in the container after connecting to Web-1. This will change the prompt Notice that I used `run` here instead of `start` because run also installs the container in addition to running the container. I may have to pull it first, then this image will be installed by run (see 17) 
+17. Inside powershell of Web-1 VM type `docker images` and then `docker run -it cyberxsecurity/ansible /bin/bash` to create + open ansible along with powershell in the container after connecting to Web-1. This will change the prompt Notice that I used `run` here instead of `start` because run also installs the container in addition to running the container. I may have to pull it first, then this image will be installed by run (see 17). Alternatively this can also be automatically done by 
 
 18. Inside container powershell of Web-1 VM **new SSH key- Third** `ssh-keygen` and `cat .ssh/id_rsa.pub `, copy this key and then update it on Azure, afterwards you can test it with `ping ipaddress`
 
@@ -536,8 +536,10 @@ There are Ansible modules for almost anything we can think of. For example:
 
 19. Exit the SSH session `exit`
 
-20. Go to the Jump-box again using SSH. Now Configure the ansible, in particular the **host file** and the `nano /etc/ansible/hosts` and the **ansible.cfg**file to assign a username `nano etc/ansible/ansible.cfg` in the same way as outlined above in point 9 (configuring Ansible(Provisioner))
+20. Go to the Jump-box again using SSH. Now **Configure the ansible**, in particular the **host file** and the `nano /etc/ansible/hosts` and the **ansible.cfg**file to assign a username `nano etc/ansible/ansible.cfg` in the same way as outlined above in point 9 (configuring Ansible(Provisioner))
 
 21. Now that the Ansible is configured in Jump-Box for automation. I will create a YAML file for automation. See point 
 
-22. You can run the YAML file in the cotainer by typing `ansible-playbook /etc/ansible/pentest.yml` Then it can perform scheduled tasks like installing doker, and other containers like dva(dam vulnerable app) and then `curl localhost/setup.php` to test the connection. 
+22. You can *run the YAML file* in the cotainer by typing `ansible-playbook /etc/ansible/pentest.yml` Then it can perform scheduled tasks like installing doker, and other containers like dva(dam vulnerable app) and then `curl localhost/setup.php` to test the connection. 
+
+23. **Adding a load balancer** then add **health probe**(to check whether the server is working before you delegate resources to it) and a backend pool so the traffic can be transferred to the servers that are part of the **backendpool**. All the virtual machines that are included in the backpool must be on the same network
