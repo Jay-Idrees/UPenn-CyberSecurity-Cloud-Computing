@@ -487,7 +487,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 5. **At this point I have a VNet protected by the security group that blocks all traffic. No virtual machine is added yet, but the Goal is to create 3 machines in the same resource group**
 
-6. Set up cryptographic **SSH keys** to access cloud servers, Passwords are weak because they can be brute forced. This is called `ground up security`. key commands: `ssh-keygen`, Do not enter any password and press enter twice,`cat ~/.ssh/id_rsa.pub`- to view the key. I did this on my laptop 
+6. Set up cryptographic **SSH keys-First** to access cloud servers, Passwords are weak because they can be brute forced. This is called `ground up security`. key commands: `ssh-keygen`, Do not enter any password and press enter twice,`cat ~/.ssh/id_rsa.pub`- to view the key. I did this on my laptop 
 
 7. So far I only have a VNet-no VM, Create a new Virtual Machine in Azure using +Add: Specify the resource group(Red-Team), Call this first VM **Jump-Box-Provisioner VM**. Be consistent with the region selected. I am on track to create 3 VMs - imp-these should share the same resource group and the region and the security group. The first VM is called Jump-box the other 2 Web-1 and Wb-2
 
@@ -519,11 +519,11 @@ There are Ansible modules for almost anything we can think of. For example:
 
 15. Next, I am going to create a new VM called Web-1 in Azure
 
-16. Then, After I am connected to the **Jump-Box-Provisioner**, in its Ansible container, I am going to create a **new SSH key** and then I will paste this SSH key in Azure for the Web-1 VM so that now this VM can only be accessed from within Ansible container in the Jump-Box-Provisional. This adds an extra layer of security. 
+16. Then, After I am connected to the **Jump-Box-Provisioner**, in its Ansible container, I am going to create a **new SSH key- second** and then I will paste this SSH key in Azure for the Web-1 VM so that now this VM can only be accessed from within Ansible container in the Jump-Box-Provisional. This adds an extra layer of security. 
 
-17. Connect with the Web-1 VM using the ansible in Jump-Box-Provisioner using  `ssh admin@jump-box-ip`. Recap: May need:  `sudo apt install docker.io`, `sudo docker pull cyberxsecurity/ansible` and switch to root user `sudo su`, `docker run -ti cyberxsecurity/ansible:latest bash` or  `docker run -it cyberxsecurity/ansible /bin/bash`  and then `exit` to leave. Selecting bash opens terminal and give you an opportunity to create a key in the container
+17. Connect with the Web-1 VM using the ansible in Jump-Box-Provisioner using  `ssh admin@jump-box-ip`. Recap: May need:  `sudo apt install docker.io`, `sudo docker pull cyberxsecurity/ansible` and switch to root user `sudo su`, `docker run -ti cyberxsecurity/ansible:latest bash` or  `docker run -it cyberxsecurity/ansible /bin/bash` (as mentioned below)  and then `exit` to leave. Selecting bash opens terminal and give you an opportunity to create a key in the container
 
-17. `docker run -it cyberxsecurity/ansible /bin/bash` to create + open powershell inside the ansible container after connecting to Web-1. Notice that I used `run` here instead of `start` because run also installs the container. I may have to pull it first, then this image will be installed by run
+17. Inside powershell of Web-1 VM type `docker images` and then `docker run -it cyberxsecurity/ansible /bin/bash` to create + open ansible along with powershell in the container after connecting to Web-1. This will change the prompt Notice that I used `run` here instead of `start` because run also installs the container in addition to running the container. I may have to pull it first, then this image will be installed by run (see 17) 
 
-18. Create a new SSH key inside the Ansible container that is now inside Web-1, copy this key and then update it. 
+18. Inside powershell of Web-1 VM **new SSH key- Third** `ssh-keygen` and `cat .ssh/id_rsa.pub `, copy this key and then update it on Azure 
 
