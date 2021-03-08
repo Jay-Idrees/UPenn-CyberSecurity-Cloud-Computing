@@ -489,7 +489,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 6. Set up cryptographic **SSH keys** to access cloud servers, Passwords are weak because they can be brute forced. This is called `ground up security`. key commands: `ssh-keygen`, Do not enter any password and press enter twice,`cat ~/.ssh/id_rsa.pub`- to view the key. I did this on my laptop 
 
-7. So far I only have a VNet-no VM, Create a new Virtual Machine in Azure using +Add: Specify the resource group(Red-Team), Call this first VM **Jump-Box-Provisioner VM**. Be consistent with the region selected. I am on track to create 3 VMs - imp-these should share the same resource group and the region and the security group
+7. So far I only have a VNet-no VM, Create a new Virtual Machine in Azure using +Add: Specify the resource group(Red-Team), Call this first VM **Jump-Box-Provisioner VM**. Be consistent with the region selected. I am on track to create 3 VMs - imp-these should share the same resource group and the region and the security group. The first VM is called Jump-box the other 2 Web-1 and Wb-2
 
 8. **Jump-Box-Provisioner VM settings**: Image: Ubuntu Server 18.04, Standard-B1s 1CPU and 1RAM (Jump-Box needs only 1 ram). Create a `username (RedAdmin)` and associate the SSH public key with it. Paste the public SSH key. I am not using password. Allow `SSH(22)` port for inbound -This is important as here I am allowing that an external ip can connect to the Jump-Box-Provisioner via the port 22. use advanced option for security group under the networking tab for custom configuration of the security group. You can also have the same username for all 3 machines
 
@@ -501,7 +501,7 @@ There are Ansible modules for almost anything we can think of. For example:
 
 12. **Now I have one is Jump-Box-Provisioner, others VMs to be created are Web-1 and Web-2 and together these three make the 3 VMs on the VNet and I have setup SSH on my laptop and added security rules to allow me to connect to the Jump-Box using my specific ip address**
 
-13. Now I am connected to Jump-Box-Provisioner via SSH-So far it does not have any provisioner function- and everyting below will happen in the Jump-Box-Provisioner which right now is just a VM. I first have to install docker in this VM which will let me install containers. Then I am going to download a container called Ansible which itself will act as a provisioner and will control other containers. Note that right now I am going to install it manually, but later I will use the YAML files to install programs and containers. Because after Ansible provisioner is up and running it can read YAML files and that is how it automates the process of installing new programs and containers-By reading YAML files- where we can assign tasks including installing a particular container. As I do not have ansible installed yet so for the first time I have to do this manually. Note that if I do not want to use `sudo` every time I can switch to root with `sudo su`
+14. Now I am connected to Jump-Box-Provisioner via SSH-So far it does not have any provisioner function- and everyting below will happen in the Jump-Box-Provisioner which right now is just a VM. I first have to install docker in this VM which will let me install containers. Then I am going to download a container called Ansible which itself will act as a provisioner and will control other containers. Note that right now I am going to install it manually, but later I will use the YAML files to install programs and containers. Because after Ansible provisioner is up and running it can read YAML files and that is how it automates the process of installing new programs and containers-By reading YAML files- where we can assign tasks including installing a particular container. As I do not have ansible installed yet so for the first time I have to do this manually. Note that if I do not want to use `sudo` every time I can switch to root with `sudo su`
 - Run `sudo apt update` then 
 - `sudo apt install docker.io`
 - `sudo systemctl status docker` to check that docker is running before I can download containers
@@ -510,10 +510,14 @@ There are Ansible modules for almost anything we can think of. For example:
 - `docker run -ti cyberxsecurity/ansible:latest bash` This goes a layer deep and switches to terminl in Ansible container
 
 
-**13**. Add Network Security group rule to give **Jump-Box-Provisioner SSH access to VNet**. This is similar to the rule used in **10**. This is an important step as this is essentially connecting the remaining 2 VMs to the Jump-Box-Provisioner. So I can use the Ansible in the Jumpbox to also control the containers in the other 2 VMs (Web-1 and Web-2). Note that this rule is tied to the VNet. By adding the rule, I am telling the network security 'guard' that let Jump-Box-Provisioner VM whose IP is xx.xx.xx.xx connect to the network via SSH using the port 22
+**13**. Add Network Security group rule to give **Jump-Box-Provisioner SSH access to VNet**. This is similar to the rule used in **10**. This is an important step as this is essentially connecting the remaining 2 VMs(to be created) to the Jump-Box-Provisioner. So I can use the Ansible in the Jumpbox to also control the containers in the other 2 VMs (Web-1 and Web-2). Note that this rule is tied to the VNet. By adding the rule, I am telling the network security 'guard' that let Jump-Box-Provisioner VM whose IP is xx.xx.xx.xx connect to the network via SSH using the port 22
 - Use the PRIVATE IP of Jump-box-Provisioner as assigned when it was created- It can be seen at 'overview' in left column when you select the Jump-Box. 
 - Destination will be the virtual network, Destination port 22 (with which the Jump-Box will connect with other VMs)
 - Paste the PRIVATE IP. 
 
-14. To quickly summarize. I used SSH to connect to Jump-Box-Provisioner and then in it install docker, and ansible container and I then granted Jump-Box-Provisioner SSH access to the VNet- which is in escense the remaining VMs (Web-1 and Web-2- that will be created soon in the VNet). Now I can use the terminal inside to Jump-Box to install containers on other VMs
+14. To quickly summarize. I used SSH to connect to Jump-Box-Provisioner and then in it installed docker, and ansible container and I then granted Jump-Box-Provisioner SSH access to the VNet- which is in essense the remaining VMs (Web-1 and Web-2- that will be created soon in the VNet). Now I can use the terminal inside to Jump-Box to install containers on other VMs
+
+15. Next, I am going to create a new VM called Web-1 in Azure
+
+16. Connect to the Web-1 VM using SSH and generate a new ssh key -Note that you can also do this while you are inside the Jump-box-provisioner . Paste this key under the change password for the Web-1 VM
 
