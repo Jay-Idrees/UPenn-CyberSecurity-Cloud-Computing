@@ -515,7 +515,7 @@ There are Ansible modules for almost anything we can think of. For example:
 - Destination will be the virtual network, Destination port 22 (with which the Jump-Box will connect with other VMs)
 - Paste the PRIVATE IP. 
 
-14. To quickly summarize. I used SSH to connect to Jump-Box-Provisioner and then in it installed docker, and ansible container and I then granted Jump-Box-Provisioner SSH access to the VNet- which is in essense the remaining VMs (Web-1 and Web-2- that will be created soon in the VNet). Now I can use the terminal inside to Jump-Box to install containers on other VMs
+14. To quickly summarize. I used SSH `ssh admin@jump-box-ip` to connect to Jump-Box-Provisioner and then in it installed docker, and ansible container and I then granted Jump-Box-Provisioner SSH access to the VNet- which is in essense the remaining VMs (Web-1 and Web-2- that will be created soon in the VNet). Now I can use the terminal inside to Jump-Box to install containers on other VMs
 
 15. Next, I am going to create a new VM called Web-1 in Azure
 
@@ -528,4 +528,16 @@ There are Ansible modules for almost anything we can think of. For example:
 18. Inside container powershell of Web-1 VM **new SSH key- Third** `ssh-keygen` and `cat .ssh/id_rsa.pub `, copy this key and then update it on Azure, afterwards you can test it with `ping ipaddress`
 
 
+- **SSH key summary** so far
+- SSH key on your computer
+- SSH key in the Jump-box
+- SSH key in VM2-
 
+
+19. Exit the SSH session `exit`
+
+20. Go to the Jump-box again using SSH. Now Configure the ansible, in particular the **host file** and the `nano /etc/ansible/hosts` and the **ansible.cfg**file to assign a username `nano etc/ansible/ansible.cfg` in the same way as outlined above in point 9 (configuring Ansible(Provisioner))
+
+21. Now that the Ansible is configured in Jump-Box for automation. I will create a YAML file for automation. See point 
+
+22. You can run the YAML file in the cotainer by typing `ansible-playbook /etc/ansible/pentest.yml` Then it can perform scheduled tasks like installing doker, and other containers like dva(dam vulnerable app) and then `curl localhost/setup.php` to test the connection. 
