@@ -550,6 +550,6 @@ There are Ansible modules for almost anything we can think of. For example:
 
 **26**. Remove NSG rule that was previously created to block all traffic to the internet
 
-27. **Redundancy**
+27. **Redundancy** You create another VM and place it behind the load balancer. This VM is an exact copy of the rest of the server and so it is not 
 
 
