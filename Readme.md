@@ -542,4 +542,14 @@ There are Ansible modules for almost anything we can think of. For example:
 
 22. You can *run the YAML file* in the cotainer by typing `ansible-playbook /etc/ansible/pentest.yml` Then it can perform scheduled tasks like installing doker, and other containers like dva(dam vulnerable app) and then `curl localhost/setup.php` to test the connection. 
 
-23. **Adding a load balancer** then add **health probe**(to check whether the server is working before you delegate resources to it) and a backend pool so the traffic can be transferred to the servers that are part of the **backendpool**. All the virtual machines that are included in the backpool must be on the same network
+23. **Adding a load balancer** then add **health probe**(to check whether the server is working before you delegate resources to it) and a backend pool so the traffic can be transferred to the servers that are part of the **backendpool**. All the virtual machines that are included in the backpool must be on the same network. This can be done by using Add+. Under basics select the options of public and static. Once the load balancer is created you can add a health prob (use TCP, 80, interval 5 unhealthy threshold 2). Then create a backend pool. Specify the virtual machine details.
+
+**24**. NSG rule Make port 80 public, by exposing it to the internet. And create an NSG rule forward port 80 from the load balancer to VNet. Specify the port(80), backend port(80), Pool, probe and session persistence(Client IP and protocol) - fill in the defaults unless mentioned in brackets. 
+
+25. NSG rule- Allow internet traffic to move to the VNet. Destination port (80), source port ranges (*), protocol any, action allow
+
+26. Remove NSG rule that was previously created to block all traffic to the internet
+
+
+
+
