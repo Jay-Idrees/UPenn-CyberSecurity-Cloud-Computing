@@ -546,10 +546,10 @@ There are Ansible modules for almost anything we can think of. For example:
 
 **24**. NSG rule Make port 80 public, by exposing it to the internet. And create an NSG rule forward port 80 from the load balancer to VNet. Specify the port(80), backend port(80), Pool, probe and session persistence(Client IP and protocol) - fill in the defaults unless mentioned in brackets. 
 
-25. NSG rule- Allow internet traffic to move to the VNet. Destination port (80), source port ranges (*), protocol any, action allow
+**25**. NSG rule- Allow internet traffic to move to the VNet. Destination port (80), source port ranges (*), protocol any, action allow
 
-26. Remove NSG rule that was previously created to block all traffic to the internet
+**26**. Remove NSG rule that was previously created to block all traffic to the internet
 
-
+27. **Redundancy**
 
 
