@@ -476,10 +476,12 @@ There are Ansible modules for almost anything we can think of. For example:
 
 ## Overall steps in Azure for configuring a secure cloud network for an organization
 
-1. Create a **resource group** (Red-Team). This is really just specifying a name fo rthe network. 
+1. Create a **resource group** (Red-Team). This is really just specifying a name for the network. 
 
 2. Create a **VNet**(Red-Team-Net) and link it to the resource group(RedTeam)
-     - Specidy the IP address and subnet and disable the security options if you do not want to pay extra
+
+ - Specidy the IP address and subnet and disable the security options if you do not want to pay extra
+ - Note that we can also create subnets which can be created independently and after a network has been created. 
 
 3. Setup a **network security group** (RedTeam-SG) - Add inboud security rule to block all traffic (deny)
 
