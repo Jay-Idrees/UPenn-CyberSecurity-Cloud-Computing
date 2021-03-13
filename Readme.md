@@ -480,10 +480,10 @@ There are Ansible modules for almost anything we can think of. For example:
 
 2. Create a **VNet**(Red-Team-VNet) and link it to the resource group(RedTeam). VNets have software version of their Virtyal Network Interface cards. The goal is to design a large network and then have a subnet inside of it (For large network- 10.0.0.0/16, for a subnet- 10.10.1.0/24). Usually the broarder net and 10.0.0.0/24 subet is created by default. 
 
- - Specidy the IP address and subnet and disable the security options if you do not want to pay extra
+ - Specidy the IP address and subnet and disable the additional security features DoS if you do not want to pay extra
  - Note that we can also create subnets which can be created independently and after a network has been created and can be added later to an existing network
 
-3. Setup a **network security group** (RedTeam-SG) - Add inboud security rule to block all traffic (deny)- It is equvilant of a network firewall. Imagine a firewall surrounding the VNET and between the virtual machines 
+3. Setup a **network security group** (RedTeam-SG) - Add inboud security rule to block all traffic (deny)- It is equvilant of a network firewall. Imagine a firewall surrounding the VNET and between the virtual machines. Simply adding a NSG to the resource group will grant some basic set of security rules. They are inhound and outbound. What these do is allow inbound and outbound through a load balancer or within network freely, but blocks every connection from outside by default. Therefore if you are later going to want to connect to Virtual machines through the internet then we will have to make adjustments to these 'univerversal for outside' block rules. 
 
 **4.** Add a new inbound **security rule** to configure the network security group just created - Block all traffic- This is the default deny rule that should get the highest priority (4096) - This is the default deny- Everything is blocked. We can also block all ports by specifying range like `0-65535`
 
